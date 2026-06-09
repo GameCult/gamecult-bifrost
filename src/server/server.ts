@@ -2,7 +2,6 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { context, reddit } from "@devvit/web/server";
 import type {
   PartialJsonValue,
-  TriggerResponse,
   UiResponse,
 } from "@devvit/web/shared";
 import {
@@ -46,7 +45,7 @@ async function onRequest(
     return;
   }
 
-  let body: BridgeReceipt | HealthResponse | UiResponse | TriggerResponse;
+  let body: BridgeReceipt | HealthResponse | UiResponse;
   switch (endpoint) {
     case ApiEndpoint.Health:
       body = { type: "health", app: "gamecult-bifrost", status: "ok" };
@@ -61,9 +60,6 @@ async function onRequest(
       break;
     case ApiEndpoint.OnPostCreate:
       body = await onMenuNewPost();
-      break;
-    case ApiEndpoint.OnAppInstall:
-      body = await onAppInstall();
       break;
     default:
       endpoint satisfies never;
@@ -143,24 +139,6 @@ async function onMenuNewPost(): Promise<UiResponse> {
     showToast: { text: `Bridge hub ${post.id} created.`, appearance: "success" },
     navigateTo: post.url || redditPermalink(post.permalink),
   };
-}
-
-async function onAppInstall(): Promise<TriggerResponse> {
-  const subreddit = await reddit.getCurrentSubreddit();
-  await reddit.submitCustomPost({
-    subredditName: subreddit.name,
-    title: "Bifrost bridge online",
-    textFallback: {
-      text:
-        "The GameCult Bifrost Reddit bridge is installed. " +
-        "Bridge actions must still originate from governed Bifrost topics.",
-    },
-    postData: {
-      kind: "gamecult-bifrost-install-receipt",
-    },
-  });
-
-  return {};
 }
 
 function getEndpoint(url: string | undefined): ApiEndpoint | undefined {

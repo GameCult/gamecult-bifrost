@@ -3,7 +3,6 @@ export const ApiEndpoint = {
   BridgePost: "/internal/bifrost/reddit-post",
   BridgeComment: "/internal/bifrost/reddit-comment",
   OnPostCreate: "/internal/menu/post-create",
-  OnAppInstall: "/internal/on-app-install",
 } as const;
 
 export type ApiEndpoint = (typeof ApiEndpoint)[keyof typeof ApiEndpoint];
