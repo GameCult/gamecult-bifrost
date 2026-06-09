@@ -1,0 +1,41 @@
+{
+  "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+  "name": "gamecult-bifrost",
+  "post": {
+    "dir": "public",
+    "entrypoints": {
+      "default": {
+        "inline": true,
+        "entry": "splash.html"
+      },
+      "game": {
+        "entry": "game.html"
+      }
+    }
+  },
+  "server": {
+    "dir": "dist/server",
+    "entry": "index.js"
+  },
+  "menu": {
+    "items": [
+      {
+        "label": "Create Bifrost bridge hub",
+        "description": "Create a Bifrost-owned Reddit bridge status post",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/post-create"
+      }
+    ]
+  },
+  "triggers": {
+    "onAppInstall": "/internal/on-app-install"
+  },
+  "scripts": {
+    "dev": "node --experimental-strip-types ./tools/build.ts --watch",
+    "build": "node --experimental-strip-types ./tools/build.ts --minify"
+  },
+  "dev": {
+    "subreddit": "gamecult_bifrost_dev"
+  }
+}
